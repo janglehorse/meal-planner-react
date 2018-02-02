@@ -6,26 +6,53 @@ class App extends React.Component {
 
     constructor (props) {
         super(props);
-        this.state = {employees: []};
+        this.state = { recipes: [] };
     }
 
     componentDidMount() {
-        client({method: 'GET', path: '/api/recipes'}).done(response => {
-            this.setState({ employees: response.entity._embedded.recipes });
+        client({ method: 'GET', path: '/api/recipes' }).done(response => {
+            this.setState({ recipes: response.entity._embedded.recipes });
         })
     }
 
     render() {
         return (
-            <EmpoyeeList employees={ this.state.employees }/>
+            <RecipeList recipes={ this.state.recipes }/>
         )
     }
 }
 
-class EmployeeList extends React.Component {
+class RecipeList extends React.Component {
     render() {
-        let employees = this.props.recipes.map(recipes =>
-            <Recipe key={ recipes._links.self.href } recipe={employee}/>
+        let recipes = this.props.recipes.map(recipes =>
+            <Recipe key={ recipes._links.self.href } recipe={ recipe }/>
+        );
+        return (
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        { recipes }
+                    </tbody>
+                </table>
         )
     }
 }
+
+class Recipe extends React.Component {
+    render() {
+        return (
+            <tr>
+                <td>{ this.props.recipe.name }</td>
+                <td>{ this.props.description }</td>
+            </tr>
+        )
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('react')
+);
