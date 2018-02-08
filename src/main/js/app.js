@@ -1,3 +1,5 @@
+'use strict';
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 const client = require('./client');
@@ -10,8 +12,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        client({ method: 'GET', path: '/api/recipes' }).done(response => {
-            this.setState({ recipes: response.entity._embedded.recipes });
+        console.log(client);
+
+        client({method: 'GET', path: '/api/recipes'}).then(response => {
+            this.setState({recipes: response.entity._embedded.recipes});
         })
     }
 
@@ -24,8 +28,8 @@ class App extends React.Component {
 
 class RecipeList extends React.Component {
     render() {
-        let recipes = this.props.recipes.map(recipes =>
-            <Recipe key={ recipes._links.self.href } recipe={ recipe }/>
+        let recipes = this.props.recipes.map(recipe =>
+            <Recipe key={ recipe._links.self.href } recipe={ recipe }/>
         );
         return (
                 <table>
@@ -46,7 +50,7 @@ class Recipe extends React.Component {
         return (
             <tr>
                 <td>{ this.props.recipe.name }</td>
-                <td>{ this.props.description }</td>
+                <td>{ this.props.recipe.description }</td>
             </tr>
         )
     }
@@ -55,4 +59,4 @@ class Recipe extends React.Component {
 ReactDOM.render(
     <App />,
     document.getElementById('react')
-);
+)
